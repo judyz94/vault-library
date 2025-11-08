@@ -199,10 +199,10 @@ All routes below require authentication (`auth:sanctum` middleware).
 
 **Base route:** `/api/users/{user}`
 
-| Method | Endpoint                         | Description                                 | Access (Role)  |
-|--------|----------------------------------|---------------------------------------------|----------------|
-| POST   | `/api/users/{user}/borrow`       | Borrow a book                               | Admin & User   |
-| POST   | `/api/users/{user}/return`       | Return a borrowed book                      | Admin & User   |
-| GET    | `/api/users/{user}/borrowed`     | View user’s borrowed books and loan history | Admin & User   |
+| Method | Endpoint                         | Description                                   | Access (Role)  |
+|--------|----------------------------------|-----------------------------------------------|----------------|
+| POST   | `/api/users/{user}/borrow`       | Borrow a book                                 | Admin & User   |
+| POST   | `/api/users/{user}/return`       | Return a borrowed book                        | Admin & User   |
+| GET    | `/api/users/{user}/borrowed`     | View user’s borrowed books and borrow history | Admin & User   |
 
 ---
