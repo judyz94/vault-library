@@ -72,7 +72,7 @@ Admins can manage all books and users, while regular users can view and track th
 
 5. **Create DB in MySQL**
 
-   The default name in the .env.example is "habit_tracker"
+   The default name in the .env.example is "vault_library"
 
 
 6. **Run migrations and seeders**
