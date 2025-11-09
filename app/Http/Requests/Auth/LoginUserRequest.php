@@ -26,4 +26,23 @@ class LoginUserRequest extends FormRequest
             'password' => 'required',
         ];
     }
+
+    /**
+     * Define body parameters for API documentation (Scribe).
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'email' => [
+                'description' => 'The email address of the user.',
+                'example' => 'johndoe@example.com',
+            ],
+            'password' => [
+                'description' => 'The password of the user.',
+                'example' => 'secret123',
+            ],
+        ];
+    }
 }
