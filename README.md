@@ -29,7 +29,7 @@ The app allows users to:
 
 Secure authentication and role-based access control using **Laravel Sanctum**.
 
-**Admin Dashboard:**
+**Admin AdminDashboard:**
 
 Admins can manage all books and users, while regular users can view and track their borrowed books from a simple dashboard.
 
@@ -62,9 +62,21 @@ Admins can manage all books and users, while regular users can view and track th
 
 3. **Configure the .env file**
 
-   Copy the sample file and edit it with the specific DB credentials:
+   Copy the sample file:
    ```bash
    cp .env.example .env
+    ```
+   
+    Edit the .env file to configure your local environment:
+    
+    - Database credentials:
+    > DB_CONNECTION, DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+    
+    - Application URL: 
+    > APP_URL (e.g., http://127.0.0.1:8000)
+    
+    - Frontend API URL: 
+    > VITE_API_BASE_URL (make sure it matches APP_URL + /api, e.g., http://127.0.0.1:8000/api)
 
 4. **Generate the application key**
    ```bash
