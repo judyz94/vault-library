@@ -12,6 +12,11 @@ use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @group Borrowing management
+ *
+ * APIs for managing book borrowings
+ */
 class BorrowingController extends Controller
 {
     use ApiResponse;
@@ -20,6 +25,17 @@ class BorrowingController extends Controller
     {
     }
 
+    /**
+     * Borrow a book
+     *
+     * Allows a user to borrow a specific book if available.
+     *
+     * @urlParam user_id integer required The ID of the user borrowing the book. Example: 3
+     * @bodyParam book_id integer required The ID of the book to borrow. Example: 7
+     *
+     * @apiResource App\Http\Resources\BorrowingResource
+     * @apiResourceModel App\Models\Borrowing
+     */
     public function borrow(BookActionRequest $request, User $user): JsonResponse
     {
         try {
@@ -35,6 +51,17 @@ class BorrowingController extends Controller
         }
     }
 
+    /**
+     * Return a borrowed book
+     *
+     * Allows a user to return a book they previously borrowed.
+     *
+     * @urlParam user_id integer required The ID of the user returning the book. Example: 3
+     * @bodyParam book_id integer required The ID of the borrowed book being returned. Example: 7
+     *
+     * @apiResource App\Http\Resources\BorrowingResource
+     * @apiResourceModel App\Models\Borrowing
+     */
     public function return(BookActionRequest $request, User $user): JsonResponse
     {
         try {
@@ -51,6 +78,16 @@ class BorrowingController extends Controller
         }
     }
 
+    /**
+     * List all borrowed books for a user
+     *
+     * Retrieves all active and past borrowed books for a specific user.
+     *
+     * @urlParam user_id integer required The ID of the user whose borrowings are being retrieved. Example: 3
+     *
+     * @apiResourceCollection App\Http\Resources\BorrowingResource
+     * @apiResourceModel App\Models\Borrowing
+     */
     public function userBorrowed(User $user): JsonResponse
     {
         // Only the user owner or admin user can perform the action

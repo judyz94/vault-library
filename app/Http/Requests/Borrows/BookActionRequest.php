@@ -29,4 +29,20 @@ class BookActionRequest extends FormRequest
             'book_id.exists' => 'The selected book does not exist.',
         ];
     }
+
+    /**
+     * Define body parameters for API documentation (Scribe).
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public function bodyParameters(): array
+    {
+        return [
+            'book_id' => [
+                'description' => 'The ID of the book to perform the action on.',
+                'example' => 5,
+            ],
+        ];
+    }
+
 }

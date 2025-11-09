@@ -9,23 +9,23 @@ The system allows admins and users to manage books, library members, and borrowi
 ## Functionalities
 The app allows users to:
 
-**Manage Books:**
+- **Manage Books:**
 
-Admins can add, edit, delete, and retrieve books with attributes such as title, author, ISBN, publication year, and availability status.
+    Admins can add, edit, delete, and retrieve books with attributes such as title, author, ISBN, publication year, and availability status.
 
-**Manage Library Users:**
+- **Manage Library Users:**
 
-Admins can create, update, and remove library members, assigning roles as **Admin** or **User**.
+    Admins can create, update, and remove library members, assigning roles as **admin** or **user**.
 
-**Borrow and Return Books:**
+- **Borrow and Return Books:**
 
-Users can borrow up to **3 books at a time**. Borrowed books are automatically marked as unavailable and become available once returned. The system tracks borrowing history and due dates (default: 14 days).
+    Users can borrow up to **3 books at a time**. Borrowed books are automatically marked as unavailable and become available once returned. The system tracks borrowing history and due dates (default: 14 days).
 
-**Search Books:**
+- **Search Books:**
 
-Search books dynamically by title, author, or ISBN, with an intuitive and responsive interface.
+    Search books dynamically by title, author, or ISBN, with an intuitive and responsive interface.
 
-**JWT Authentication:**
+**Authentication:**
 
 Secure authentication and role-based access control using **Laravel Sanctum**.
 
@@ -72,7 +72,7 @@ Admins can manage all books and users, while regular users can view and track th
 
 5. **Create DB in MySQL**
 
-   The default name in the .env.example is "habit_tracker"
+   The default name in the .env.example is "vault_library"
 
 
 6. **Run migrations and seeders**
@@ -115,5 +115,109 @@ Admins can manage all books and users, while regular users can view and track th
     Or, to generate a code coverage report in HTML:
     ```bash
     vendor/bin/phpunit --coverage-html coverage
+
+13. **Generate API Documentation**
+
+    This project uses Laravel Scribe to automatically generate API documentation from the routes and annotations. To generate or update the documentation, run:
+
+    ```bash
+    php artisan scribe:generate
+    ```
+
+    After generating, you can view the documentation locally by visiting:
+
+    ```http
+    http://127.0.0.1:8000/docs
+    ```
+    (or the corresponding URL for your local environment)
+
+---
+
+## Authentication & API Overview
+
+This project provides a secure RESTful API for managing a digital library system, built with **Laravel Sanctum** for token-based authentication.
+
+Users can log in to borrow and return books, while administrators can fully manage users, books, and borrowing records.
+
+### Roles
+
+- **Admin** — Has full system access.  
+  Can:
+    - Create, update, list, show and delete users.
+    - Create, update, list, show and delete books.
+    - Search books.
+    - Borrow and return books on behalf of users.
+    - View the list of borrowed books for any user.
+
+- **User** — Has limited access.  
+  Can:
+    - Browse and search available books.
+    - Borrow and return their own books.
+    - View their own borrowing history.
+
+### Authentication Flow
+
+The authentication system uses **Laravel Sanctum** tokens.  
+Users must first register or log in to obtain an **API token**, which must be included in subsequent requests via the `Authorization` header.
+
+#### Headers Example
+```http
+Authorization: Bearer your_api_token_here
+Accept: application/json
+```
+
+### Authentication API
+
+**Base route:** `/api`
+
+| Method | Endpoint         | Description                     | Auth Required |
+|--------|------------------|----------------------------------|--------------|
+| POST   | `/api/login`     | Log in and receive an API token  | No           |
+| POST   | `/api/logout`    | Log out and revoke the token     | Yes          |
+
+---
+
+## Protected API Endpoints
+
+All routes below require authentication (`auth:sanctum` middleware).
+
+### Users API
+
+**Base route:** `/api/users`
+
+| Method | Endpoint             | Description              | Access (Role) |
+|--------|----------------------|--------------------------|---------------|
+| GET    | `/api/users`         | List all users           | Admin & User  |
+| GET    | `/api/users/{id}`    | Get a specific user      | Admin & User  |
+| POST   | `/api/users`         | Create a new user        | Admin only    |
+| PUT    | `/api/users/{id}`    | Update an existing user  | Admin only    |
+| DELETE | `/api/users/{id}`    | Delete a user            | Admin only    |
+
+---
+
+### Books API
+
+**Base route:** `/api/books`
+
+| Method | Endpoint            | Description             | Access (Role) |
+|--------|---------------------|-------------------------|---------------|
+| GET    | `/api/books`        | List all books          | Admin & User  |
+| GET    | `/api/books/{id}`   | Get a specific book     | Admin & User  |
+| SEARCH | `/api/books/search` | Search a book           | Admin & User  |
+| POST   | `/api/books`        | Create a new book       | Admin only    |
+| PUT    | `/api/books/{id}`   | Update an existing book | Admin only    |
+| DELETE | `/api/books/{id}`   | Delete a book           | Admin only    |
+
+---
+
+### Borrowing API
+
+**Base route:** `/api/users/{user}`
+
+| Method | Endpoint                         | Description                                   | Access (Role)  |
+|--------|----------------------------------|-----------------------------------------------|----------------|
+| POST   | `/api/users/{user}/borrow`       | Borrow a book                                 | Admin & User   |
+| POST   | `/api/users/{user}/return`       | Return a borrowed book                        | Admin & User   |
+| GET    | `/api/users/{user}/borrowed`     | View user’s borrowed books and borrow history | Admin & User   |
 
 ---

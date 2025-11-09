@@ -13,10 +13,23 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+/**
+ * @group Book management
+ *
+ * APIs for managing books
+ */
 class BookController extends Controller
 {
     use ApiResponse;
 
+    /**
+     * Get paginated list of books
+     *
+     * Retrieves a paginated list of books, including their associated author.
+     *
+     * @apiResource App\Http\Resources\BookResource
+     * @apiResourceModel App\Models\Book
+     */
     public function index(): JsonResponse
     {
         $books = Book::with('author')->paginate(10);
@@ -27,6 +40,21 @@ class BookController extends Controller
         );
     }
 
+    /**
+     * Create a new book in the library.
+     *
+     * Creates a new book record with the given details such as title, author, ISBN,
+     * publication year, and availability status.
+     *
+     * @bodyParam title string required The title of the book. Example: Clean Code
+     * @bodyParam author_id int required The ID of the author. Example: 1
+     * @bodyParam isbn string required The ISBN of the book (unique). Example: 9780132350884
+     * @bodyParam publication_year int required The publication year of the book. Example: 2008
+     * @bodyParam available boolean Indicates if the book is available for borrowing. Example: true
+     *
+     * @apiResource App\Http\Resources\BookResource
+     * @apiResourceModel App\Models\Book
+     */
     public function store(StoreBookRequest $request): JsonResponse
     {
         try {
@@ -46,6 +74,18 @@ class BookController extends Controller
         }
     }
 
+    /**
+     * Show a specific book
+     *
+     * Retrieves the details of a single book by its ID, including its author.
+     *
+     * @urlParam id integer required The ID of the book. Example: 1
+     *
+     * @responseField message string Success message
+     * @response 200 {
+     * "message": "Book retrieved successfully."
+     * }
+     */
     public function show(Book $book): JsonResponse
     {
         $book->load('author');
@@ -56,6 +96,19 @@ class BookController extends Controller
         );
     }
 
+    /**
+     * Update a book
+     *
+     * Updates the information of a specific book using validated request data.
+     *
+     * @urlParam id integer required The ID of the book to update. Example: 1
+     * @bodyParam title string The title of the book. Example: "The Silmarillion"
+     * @bodyParam author_id integer The ID of the author. Example: 2
+     * @bodyParam published_year integer The year the book was published. Example: 1977
+     *
+     * @apiResource App\Http\Resources\BookResource
+     * @apiResourceModel App\Models\Book
+     */
     public function update(UpdateBookRequest $request, Book $book): JsonResponse
     {
         try {
@@ -74,6 +127,18 @@ class BookController extends Controller
         }
     }
 
+    /**
+     * Delete a book
+     *
+     * Removes a book record from the database by its ID.
+     *
+     * @urlParam id integer required The ID of the book to delete. Example: 1
+     *
+     * @responseField message string Success message
+     * @response 200 {
+     * "message": "Book deleted successfully."
+     * }
+     */
     public function destroy(Book $book): JsonResponse
     {
         $book->delete();
@@ -82,7 +147,12 @@ class BookController extends Controller
     }
 
     /**
-     * Search books by title, author name, or ISBN.
+     *  Search books by title, author name, or ISBN.
+     *
+     * @queryParam q string required The search query for title, author name, or ISBN. Example: clean
+     *
+     * @apiResource App\Http\Resources\BookResource
+     * @apiResourceModel App\Models\Book
      */
     public function search(Request $request): JsonResponse
     {
