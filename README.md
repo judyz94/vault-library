@@ -116,6 +116,21 @@ Admins can manage all books and users, while regular users can view and track th
     ```bash
     vendor/bin/phpunit --coverage-html coverage
 
+13. **Generate API Documentation**
+
+    This project uses Laravel Scribe to automatically generate API documentation from the routes and annotations. To generate or update the documentation, run:
+
+    ```bash
+    php artisan scribe:generate
+    ```
+
+    After generating, you can view the documentation locally by visiting:
+
+    ```http
+    http://127.0.0.1:8000/docs
+    ```
+    (or the corresponding URL for your local environment)
+
 ---
 
 ## Authentication & API Overview
