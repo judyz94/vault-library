@@ -233,3 +233,200 @@ All routes below require authentication (`auth:sanctum` middleware).
 | GET    | `/api/users/{user}/borrowed`     | View user’s borrowed books and borrow history | Admin & User   |
 
 ---
+
+## UI Flow
+
+### Authentication
+After the local server is running, open your browser and go to the URL shown in the terminal (usually http://127.0.0.1:8000)
+
+Go directly to login route http://127.0.0.1:8000/login and log in using the following credentials for Admin role:
+
+> ```php
+> 'email' => 'admin@example.com'
+> 'password' => '12345678%'
+> ```
+
+Or use these credentials for User library role:
+
+> ```php
+> 'email' => 'user@example.com'
+> 'password' => '12345678%'
+> ```
+
+### Dashboard
+After logging in, you’ll be taken to the Dashboard, which serves as the main page of the application.
+
+The project includes two dashboards, one for **Admin** users and another for **Library Users**.
+
+### Admin Dashboard
+
+The admin dashboard features a left-side menu with three options: **Users**, **Books**, and **Borrowing**.
+
+#### Users
+![Admin_Dashboard](resources/images/users.png)
+
+- List all users in the system.
+- Search users by **Name**, **Email**, or **Library ID**.
+- View, edit, and delete users.
+- Users table columns:
+    - **Name**
+    - **Email**
+    - **Library ID**
+    - **Role**
+
+**User Form Fields and Instructions:**
+
+| Field | Description | Example | Validation |
+|-------|-------------|---------|-----------|
+| name | The full name of the user. | Mariana Perez | required, string, max:255 |
+| email | The unique email address of the user. | mariana.perez@example.com | required, email, unique |
+| password | The user’s password. Must be at least 8 characters long and confirmed. | password123 | required, confirmed, min:8 |
+| password_confirmation | Confirmation of the password. Must match the `password` field. | password123 | must match password |
+| library_id | The unique library identifier assigned to the user. | LIB123456 | required, string, max:255, unique |
+| role | The user’s role within the system. Must be one of the values defined in `UserRoleEnum`. | admin | nullable, enum |
+
+ 
+#### Books
+![Books](resources/images/books.png)
+
+- List all books in the library.
+- Search books by **Title**, **Author**, or **ISBN**.
+- View, edit, and delete books.
+- Books table columns:
+    - **Title**
+    - **Author**
+    - **ISBN**
+    - **Publication Year**
+    - **Available**
+
+**Book Form Fields and Instructions:**
+
+| Field | Description | Example | Validation |
+|-------|-------------|---------|-----------|
+| title | Title of the book. | The Pragmatic Programmer | required, string, max:255 |
+| author_id | ID of the author who wrote the book. | 1 | required, exists in authors table |
+| isbn | Unique ISBN code of the book. | 978-0135957059 | required, string, unique |
+| publication_year | Year the book was published. | 2019 | required, integer, min:1000, max:current year |
+| available | Indicates if the book is available for loan. | true | boolean |
+
+
+#### Borrowing
+![Admin_borrowing](resources/images/admin-borrowing.png)
+- Borrow books to different users in the system.
+- Choose from the list of currently available books.
+- Return books previously borrowed by users.
+- View borrowed books per user.
+- Borrowing table columns:
+    - **Title**
+    - **Borrowed At**
+    - **Due Date**
+
+### Library User Dashboard
+![User_Dashboard](resources/images/user-borrowing.png)
+
+The library user dashboard allows the logged-in user to:
+- View the list of books currently borrowed by themselves.
+- Borrowed books table columns:
+    - **Title**
+    - **Borrowed At**
+    - **Due Date**  
+
+---
+
+## Architectural Decisions
+
+This Vault Library has been designed following modern best practices for React and Laravel applications. Key architectural decisions are summarized below:
+
+### 1. Backend Integration
+- **Laravel + RESTful API:** Backend logic is exposed through RESTful API endpoints for users, books, and borrowings.
+- **Server-side Validation:** Each resource (User, Book, Borrowing) validates inputs strictly before saving to ensure data integrity.
+- **Scribe for API Documentation:** Endpoints and body parameters are documented for frontend consumption and clarity.
+
+### 2. Data Architecture
+The system defines several Eloquent relationships to connect authors, books, users, and borrowings.
+These relationships ensure data integrity and simplify queries when retrieving related information.
+
+- **Eloquent Relationships (Laravel):**
+    - Author → Books: One-to-Many -> One author can have many books.
+    - Book → Author: Many-to-One -> Many books can belong to the same author.
+    - User ↔ Books: Many-to-Many (through Borrowings) -> One user can borrow many books.
+    - Book ↔ Users: Many-to-Many (through Borrowings) -> A book can be borrowed by multiple users over time.
+
+- **Book Availability:** Boolean `available` field controls borrowing status.
+- **Borrowing History:** `borrowed_at` and `due_at` fields allow tracking.
+
+### 3. Folder Structure
+The frontend follows a domain-oriented structure for clarity and maintainability:
+
+```
+resources/
+js/
+api/ → API call functions
+api.js
+components/ → Reusable components
+Dashboard/
+Layout/
+context/ → AuthContext
+AuthContext.jsx
+pages/ → Main views (Login, AdminDashboard, UserDashboard, NotFound)
+App.jsx → Root component
+main.jsx → App entry point
+```
+
+### 4. UI Design Decisions
+- **Role-based Dashboards:** Admin and Library User dashboards are separated with different functionalities.
+- **Tailwind CSS:** Ensures consistent styling, responsive design, and a unified color palette (neutrals, cyan, emerald).
+- **Modals and Inline Feedback:** Critical actions (create, edit, borrow, return) use modals with alert messages to provide immediate feedback.
+
+### 5. Scalability
+- **Decoupled Components:** Facilitates reusability and maintainability.
+
+---
+
+## Fintech-Inspired Design Choices
+
+The design of this Library Management System draws inspiration from fintech applications, focusing on **clarity and minimalism**. Here are the key design choices:
+
+### 1. Dashboard Visualization
+- **Admin Dashboard:** Presents a clear overview of users, books, and borrowing activity.
+- **Tables with actionable data:** Each table shows essential fields to support quick decision-making.
+- **Borrowing Panel:** Highlights borrowed books per user with timestamps and due dates, similar to financial transaction dashboards where accountability is crucial.
+
+### 2. Feedback Loops
+- **Alerts for user actions:** Success and error notifications appear immediately when creating, updating, or deleting users/books, or when borrowing/returning books.
+- **Interactive form validation:** Forms provide real-time validation errors, ensuring data integrity and guiding the user before submission.
+- **Search and filtering:** Instant search by title, author, ISBN, or user details, mimicking fintech search behavior for fast data retrieval.
+
+### 3. Consistent UI and Visual Hierarchy
+- **Color Palette:** Dark neutral backgrounds (`bg-neutral-800`, `bg-neutral-900`) with **cyan and emerald highlights** for interactive elements and calls-to-action, inspired by fintech dashboards that emphasize actionable data.
+- **Buttons and Forms:** Gradient buttons (`bg-gradient-to-r from-cyan-500 to-emerald-400`) signal primary actions clearly, with hover effects and shadows for immediate visual feedback.
+- **Information Density:** Tables and forms are designed for high information density without overwhelming the user.
+
+### 4. Accountability and User Roles
+- **Role-based dashboards:** Admins can manage users, books, and borrowing, while library users see only their borrowed books.
+- **Borrowing limits and history:** Each action is recorded, showing borrowed books, due dates, and availability, reflecting transaction-like tracking as in fintech apps.
+
+### 5. Innovation in Interaction
+- **Modal forms and inline actions:** Editing, returning, and borrowing actions are performed in modals and inline buttons, reducing page reloads and improving workflow efficiency.
+- **Responsive design:** The layout adapts to different screen sizes, keeping essential controls accessible.
+
+---
+
+## Progress Log
+
+- **2025-11-07:** Project setup, Laravel backend and React frontend initialized.
+- **2025-11-07:** Created models and migrations.
+- **2025-11-07:** Created initial README file.
+- **2025-11-08:** Created routes, middleware, controllers, services, requests and resources.
+- **2025-11-08:** Implemented API endpoints, created and tested **POSTMAN** collection.
+- **2025-11-09:** Built Login, Admin Dashboard layout and navigation menu.
+- **2025-11-09:** Added search and filtering for Users and Books.
+- **2025-11-09:** Implemented User and Book forms with validation.
+- **2025-11-09:** Added Borrowing functionality (borrow/return books).
+- **2025-11-09:** Implemented library User dashboard to view borrowed books.
+- **2025-11-10:** Created factories and seeds.
+- **2025-11-10:** Create feature tests.
+- **2025-11-10:** Check and refactor code and fixed bugs.
+- **2025-11-10:** Created documentation with **Laravel Scribe** and added necessary annotations.
+- **2025-11-10:** Updated **README** file with UI flow instructions, progress log.
+

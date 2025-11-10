@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Navbar from "../Layout/Navbar";
-import UserSidebar from "../Layout/UserSidebar.jsx";
-import UserBorrowing from "./UserBorrowing.jsx";
+import Navbar from "../components/Layout/Navbar.jsx";
+import UserSidebar from "../components/Layout/UserSidebar.jsx";
+import UserBorrowing from "../components/Dashboard/UserBorrowing.jsx";
 
 export default function UserDashboard() {
     const [activeTab, setActiveTab] = useState("borrowing");

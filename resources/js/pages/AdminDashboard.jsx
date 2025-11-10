@@ -1,9 +1,9 @@
 import { useState } from "react";
-import Users from "./Users";
-import AdminSidebar from "../Layout/AdminSidebar.jsx";
-import Navbar from "../Layout/Navbar";
-import Books from "./Books.jsx";
-import Borrowing from "./Borrowing.jsx";
+import Users from "../components/Dashboard/Users.jsx";
+import AdminSidebar from "../components/Layout/AdminSidebar.jsx";
+import Navbar from "../components/Layout/Navbar.jsx";
+import Books from "../components/Dashboard/Books.jsx";
+import Borrowing from "../components/Dashboard/Borrowing.jsx";
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState("users");
