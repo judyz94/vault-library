@@ -29,8 +29,8 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'email', Rule::unique('users', 'email')->ignore($userId)],
-            'password' => ['nullable', 'confirmed', Password::min(8)],
-            'library_id' => ['required', 'string', 'max:255', Rule::unique('users', 'library_id')->ignore($userId)],
+            'password' => ['sometimes', 'confirmed', Password::min(8)],
+            'library_id' => ['sometimes', 'string', 'max:255', Rule::unique('users', 'library_id')->ignore($userId)],
             'role' => ['sometimes', Rule::enum(UserRoleEnum::class)],
         ];
     }

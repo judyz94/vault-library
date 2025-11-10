@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\BorrowingController;
 use App\Http\Controllers\Api\UserController;
@@ -23,6 +24,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::middleware([EnsureUserIsAdmin::class])->group(function () {
         Route::apiResource('/users', UserController::class)->except(['index', 'show']);
         Route::apiResource('/books', BookController::class)->except(['index', 'show']);
+        Route::apiResource('/authors', AuthorController::class)->only(['index', 'create']);
     });
 
     Route::post('/users/{user}/borrow', [BorrowingController::class, 'borrow']);

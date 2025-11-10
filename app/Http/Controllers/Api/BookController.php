@@ -163,16 +163,14 @@ class BookController extends Controller
         }
 
         $books = Book::with('author')
-            ->where('title', 'like', "%{$query}%")
-            ->orWhereHas('author', function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%");
+            ->where(function ($q) use ($query) {
+                $q->where('title', 'like', "%{$query}%")
+                    ->orWhereHas('author', function ($q2) use ($query) {
+                        $q2->where('name', 'like', "%{$query}%");
+                    })
+                    ->orWhere('isbn', 'like', "%{$query}%");
             })
-            ->orWhere('isbn', 'like', "%{$query}%")
             ->paginate(10);
-
-        if ($books->isEmpty()) {
-            return $this->error('No books found matching your search.', 404);
-        }
 
         return $this->success(
             BookResource::collection($books),
