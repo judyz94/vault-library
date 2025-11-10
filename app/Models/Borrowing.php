@@ -33,9 +33,4 @@ class Borrowing extends Model
     {
         return $this->belongsTo(Book::class);
     }
-
-    public function isReturned(): bool
-    {
-        return !is_null($this->returned_at);
-    }
 }
