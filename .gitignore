@@ -26,3 +26,4 @@ public/vendor/scribe/
 /.scribe/endpoints.cache
 /.scribe/routes.cache.php
 /.scribe/.filehashes
+/coverage
