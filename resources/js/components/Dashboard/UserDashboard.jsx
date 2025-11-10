@@ -1,15 +1,15 @@
 import { useState } from "react";
 import Navbar from "../Layout/Navbar";
 import UserSidebar from "../Layout/UserSidebar.jsx";
-import BorrowingHistory from "./BorrowingHistory.jsx";
+import UserBorrowing from "./UserBorrowing.jsx";
 
 export default function UserDashboard() {
-    const [activeTab, setActiveTab] = useState("users");
+    const [activeTab, setActiveTab] = useState("borrowing");
 
     const renderTab = () => {
         switch(activeTab) {
-            case "borrowing": return <BorrowingHistory />;
-            default: return <BorrowingHistory />;
+            case "borrowing": return <UserBorrowing />;
+            default: return <UserBorrowing />;
         }
     };
 

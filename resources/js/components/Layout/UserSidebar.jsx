@@ -2,7 +2,7 @@ import {useEffect} from "react";
 
 export default function UserSidebar({ activeTab, setActiveTab }) {
     const menuItems = [
-        { id: "borrowing", label: "Borrowing History" },
+        { id: "borrowing", label: "Borrowed Books" },
     ];
 
     useEffect(() => {

@@ -3,7 +3,7 @@ import Users from "./Users";
 import AdminSidebar from "../Layout/AdminSidebar.jsx";
 import Navbar from "../Layout/Navbar";
 import Books from "./Books.jsx";
-import BorrowingSystem from "./BorrowingSystem.jsx";
+import Borrowing from "./Borrowing.jsx";
 
 export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState("users");
@@ -15,7 +15,7 @@ export default function AdminDashboard() {
             case "books":
                 return <Books />;
             case "borrowing":
-                return <BorrowingSystem />;
+                return <Borrowing />;
             default:
                 return <Users />;
         }
