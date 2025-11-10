@@ -28,7 +28,6 @@ class UpdateBookRequest extends FormRequest
             'isbn' => [
                 'sometimes',
                 'string',
-                'max:20',
                 Rule::unique('books', 'isbn')->ignore($this->book),
             ],
             'publication_year' => ['sometimes', 'integer', 'min:1000', 'max:' . date('Y')],
