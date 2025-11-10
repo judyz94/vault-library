@@ -22,7 +22,7 @@ class StoreAuthorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'bio' => ['nullable', 'string', 'max:1000'],
         ];
     }
@@ -39,7 +39,7 @@ class StoreAuthorRequest extends FormRequest
                 'description' => 'The name of the author',
                 'example' => 'Robert C. Martin',
             ],
-            'author_id' => [
+            'bio' => [
                 'description' => 'General information about the book author.',
                 'example' => 'American software engineer, known for his book "Clean Code".',
             ],

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('/logout', [AuthController::class,'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::get('/books/search', [BookController::class, 'search']);
 
@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::middleware([EnsureUserIsAdmin::class])->group(function () {
         Route::apiResource('/users', UserController::class)->except(['index', 'show']);
         Route::apiResource('/books', BookController::class)->except(['index', 'show']);
-        Route::apiResource('/authors', AuthorController::class)->only(['index', 'create']);
+        Route::apiResource('/authors', AuthorController::class)->only(['index', 'store']);
     });
 
     Route::post('/users/{user}/borrow', [BorrowingController::class, 'borrow']);
