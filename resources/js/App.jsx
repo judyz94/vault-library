@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
-import NotFound from "./components/NotFound.jsx";
+import NotFound from "./pages/NotFound.jsx";
 import DashboardRouter from "./components/Dashboard/DashboardRouter.jsx";
 
 export default function App() {
