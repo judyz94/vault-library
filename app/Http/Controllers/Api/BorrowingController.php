@@ -11,6 +11,7 @@ use App\Traits\ApiResponse;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * @group Borrowing management
@@ -47,6 +48,7 @@ class BorrowingController extends Controller
                 201
             );
         } catch (Exception $e) {
+            Log::error("Borrow functionality failed for user_id {$user->id}: {$e->getMessage()}");
             return $this->error($e->getMessage(), 400);
         }
     }
@@ -74,7 +76,8 @@ class BorrowingController extends Controller
         } catch (ModelNotFoundException $e) {
             return $this->error('No active borrowing found for this book.', 404);
         } catch (Exception $e) {
-            return $this->error($e->getMessage(), 400);
+            Log::error("Return functionality failed for user_id {$user->id}: {$e->getMessage()}");
+            return $this->error('An unexpected error occurred.', 400);
         }
     }
 

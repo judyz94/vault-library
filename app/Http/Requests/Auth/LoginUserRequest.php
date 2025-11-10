@@ -31,6 +31,7 @@ class LoginUserRequest extends FormRequest
      * Define body parameters for API documentation (Scribe).
      *
      * @return array<string, array<string, mixed>>
+     * @codeCoverageIgnore
      */
     public function bodyParameters(): array
     {

@@ -79,10 +79,10 @@ export default function UserBorrowing({ authUser }) {
                                 {b.book.title}
                             </td>
                             <td className="px-4 py-2 text-neutral-400">
-                                {b.borrowed_at}
+                                {new Date(b.borrowed_at).toLocaleDateString('en-CA')}
                             </td>
                             <td className="px-4 py-2 text-neutral-400">
-                                {b.due_at}
+                                {new Date(b.due_at).toLocaleDateString('en-CA')}
                             </td>
                         </tr>
                     ))}

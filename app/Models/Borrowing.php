@@ -18,6 +18,12 @@ class Borrowing extends Model
         'returned_at',
     ];
 
+    protected $casts = [
+        'borrowed_at' => 'datetime',
+        'due_at' => 'datetime',
+        'returned_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -26,10 +32,5 @@ class Borrowing extends Model
     public function book(): BelongsTo
     {
         return $this->belongsTo(Book::class);
-    }
-
-    public function isReturned(): bool
-    {
-        return !is_null($this->returned_at);
     }
 }

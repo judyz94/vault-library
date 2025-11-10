@@ -38,6 +38,7 @@ class UpdateUserRequest extends FormRequest
     /**
      * Define body parameters for API documentation (Scribe).
      *
+     * @codeCoverageIgnore
      * @return array<string, array<string, mixed>>
      */
     public function bodyParameters(): array

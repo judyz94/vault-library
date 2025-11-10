@@ -179,8 +179,12 @@ export default function Borrowing() {
                             {borrowedBooks.map((b) => (
                                 <tr key={b.id} className="border-t border-neutral-800">
                                     <td className="px-4 py-2">{b.book.title}</td>
-                                    <td className="px-4 py-2">{b.borrowed_at}</td>
-                                    <td className="px-4 py-2">{b.due_at}</td>
+                                    <td className="px-4 py-2">
+                                        {new Date(b.borrowed_at).toLocaleDateString('en-CA')}
+                                    </td>
+                                    <td className="px-4 py-2">
+                                        {new Date(b.due_at).toLocaleDateString('en-CA')}
+                                    </td>
                                     <td className="px-4 py-2 text-center">
                                         <button
                                             onClick={() => handleReturn(b.book.id)}
