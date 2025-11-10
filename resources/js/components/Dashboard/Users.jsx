@@ -96,7 +96,8 @@ export default function UsersTable() {
     const filteredUsers = users.filter(
         (u) =>
             u.name.toLowerCase().includes(search.toLowerCase()) ||
-            u.email.toLowerCase().includes(search.toLowerCase())
+            u.email.toLowerCase().includes(search.toLowerCase()) ||
+            u.library_id.toLowerCase().includes(search.toLowerCase())
     );
 
     const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -128,18 +129,19 @@ export default function UsersTable() {
                 <div className="flex items-center gap-3">
                     <input
                         type="text"
-                        placeholder="Search user..."
+                        placeholder="Search by name, email or ID"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
-                       text-neutral-200 text-sm focus:outline-none focus:border-cyan-400
-                       placeholder-neutral-500"
+                        className="w-64 md:w-70 px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
+                   text-neutral-200 text-sm focus:outline-none focus:border-cyan-400
+                   placeholder-neutral-500"
                     />
+
                     <button
                         onClick={handleCreate}
                         className="px-4 py-2 rounded-lg text-sm font-medium transition-all
-                       bg-gradient-to-r from-cyan-500 to-emerald-400 text-neutral-900
-                       hover:scale-105 hover:shadow-[0_0_12px_rgba(6,182,212,0.4)]"
+                   bg-gradient-to-r from-cyan-500 to-emerald-400 text-neutral-900
+                   hover:scale-105 hover:shadow-[0_0_12px_rgba(6,182,212,0.4)]"
                     >
                         + Add User
                     </button>

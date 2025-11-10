@@ -6,6 +6,7 @@ export default function BooksTable() {
     const [books, setBooks] = useState([]);
     const [authors, setAuthors] = useState([]);
     const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [alert, setAlert] = useState(null);
     const [showModal, setShowModal] = useState(false);
@@ -22,13 +23,59 @@ export default function BooksTable() {
     useEffect(() => {
         (async () => {
             try {
-                await Promise.all([fetchBooks(), fetchAuthors()]);
+                await fetchAuthors();
             } catch (err) {
                 console.error(err);
-                showAlert("Error loading data", "error");
+                showAlert("Error loading authors", "error");
             }
         })();
     }, []);
+
+
+    useEffect(() => {
+        // If the search is cleared, immediately reload the original list
+        if (!search.trim()) {
+            (async () => {
+                try {
+                    await fetchBooks();
+                } catch (err) {
+                    console.error(err);
+                    showAlert("Error loading data", "error");
+                }
+            })();
+            return;
+        }
+
+        // If there is text, use debounce to search
+        const delayDebounce = setTimeout(async () => {
+            try {
+                await searchBooks(search);
+            } catch (err) {
+                console.error(err);
+                showAlert("Error searching books", "error");
+            }
+        }, 500);
+
+        // Clear timeout if the user continues typing
+        return () => clearTimeout(delayDebounce);
+    }, [search]);
+
+    const searchBooks = async (query) => {
+        setLoading(true);
+
+        try {
+            const res = await api.get(`/books/search?q=${encodeURIComponent(String(query))}`);
+            setBooks(res.data.data);
+        } catch (err) {
+            console.error(err);
+            const msg =
+                err.response?.data?.message ||
+                "No books found or an error occurred while searching.";
+            showAlert(msg, "error");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const fetchBooks = async () => {
         try {
@@ -116,15 +163,9 @@ export default function BooksTable() {
         }
     };
 
-    const filteredBooks = books.filter(
-        (b) =>
-            b.title.toLowerCase().includes(search.toLowerCase()) ||
-            b.author.toLowerCase().includes(search.toLowerCase()) ||
-            b.isbn.toLowerCase().includes(search.toLowerCase())
-    );
+    const totalPages = Math.ceil(books.length / itemsPerPage);
 
-    const totalPages = Math.ceil(filteredBooks.length / itemsPerPage);
-    const paginatedBooks = filteredBooks.slice(
+    const paginatedBooks = books.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -154,18 +195,19 @@ export default function BooksTable() {
                 <div className="flex items-center gap-3">
                     <input
                         type="text"
-                        placeholder="Search book..."
+                        placeholder="Search by title, author or ISBN"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
-                                   text-neutral-200 text-sm focus:outline-none focus:border-cyan-400
-                                   placeholder-neutral-500"
+                        className="w-64 md:w-70 px-4 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
+                   text-neutral-200 text-sm focus:outline-none focus:border-cyan-400
+                   placeholder-neutral-500"
                     />
+
                     <button
                         onClick={handleCreate}
                         className="px-4 py-2 rounded-lg text-sm font-medium transition-all
-                                   bg-gradient-to-r from-cyan-500 to-emerald-400 text-neutral-900
-                                   hover:scale-105 hover:shadow-[0_0_12px_rgba(6,182,212,0.4)]"
+                   bg-gradient-to-r from-cyan-500 to-emerald-400 text-neutral-900
+                   hover:scale-105 hover:shadow-[0_0_12px_rgba(6,182,212,0.4)]"
                     >
                         + Add Book
                     </button>
