@@ -5,6 +5,7 @@ namespace Tests\Feature\Api;
 use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UserControllerTest extends TestCase
@@ -139,6 +140,36 @@ class UserControllerTest extends TestCase
             ->putJson("/api/users/{$this->libraryUser->id}", $payload);
 
         $response->assertStatus(403);
+    }
+
+    public function test_update_user_hashes_password_when_provided(): void
+    {
+        $payload = [
+            'name' => 'Updated Name',
+            'email' => 'updated@example.com',
+            'library_id' => 'AAA1',
+            'role' => UserRoleEnum::Admin->value,
+            'password' => 'newSecret123',
+            'password_confirmation' => 'newSecret123',
+        ];
+
+        $response = $this->actingAs($this->adminUser, 'sanctum')
+            ->putJson("/api/users/{$this->libraryUser->id}", $payload);
+
+        $response->assertStatus(200)
+            ->assertJson([
+                'status' => 'success',
+                'message' => 'User updated successfully.'
+            ]);
+
+        $user = $this->libraryUser->fresh();
+
+        $this->assertTrue(Hash::check('newSecret123', $user->password));
+
+        $this->assertEquals('Updated Name', $user->name);
+        $this->assertEquals('updated@example.com', $user->email);
+        $this->assertEquals('AAA1', $user->library_id);
+        $this->assertEquals(UserRoleEnum::Admin->value, $user->role);
     }
 
     public function test_destroy_deletes_user_as_admin(): void
