@@ -13,14 +13,14 @@ class AuthorControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected User $user;
+    protected User $adminUser;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create(['role' => UserRoleEnum::Admin->value]);
-        Sanctum::actingAs($this->user, ['*']);
+        $this->adminUser = User::factory()->create(['role' => UserRoleEnum::Admin->value]);
+        Sanctum::actingAs($this->adminUser, ['*']);
     }
 
     public function test_index_returns_paginated_authors(): void
